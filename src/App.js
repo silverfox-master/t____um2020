@@ -1,26 +1,42 @@
 import React from 'react';
-import logo from './logo.svg';
+import {DATA} from './data.js'
 import './App.css';
+import DenceTable from './my-table'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+
+class App extends React.Component {
+  constructor(){
+    super()
+    this.state = {data:null}
+  }
+
+  createFetch (){
+    return new Promise(function(resolve){
+      resolve({
+        ...DATA,
+        'rates': Object.entries(DATA.rates).map((e) => ( { [e[0]]: e[1] } ))
+      })
+    })
+  }
+  componentDidMount(){
+    this.createFetch().then(response => this.setState({data : response}))
+
+  }
+
+  render(){
+    
+    return (
+      <div align='center'>
+        
+       {(this.state.data!==null)? <DenceTable dataObj={this.state.data}/> : <p>STILL LOADING</p>}
+       
+      </div>
+  )
+  }
+
+
 }
 
 export default App;
